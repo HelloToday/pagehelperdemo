@@ -75,7 +75,7 @@
 				#{locationType}
 			</foreach>
 		</if>
-		order by q.createTime desc limit #{startIndex},#{pageSize}
+		order by q.createTime desc
 	</select>
 	
 </mapper>
