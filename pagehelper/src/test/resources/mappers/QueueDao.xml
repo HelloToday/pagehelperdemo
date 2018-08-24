@@ -76,6 +76,7 @@
 			</foreach>
 		</if>
 		order by q.createTime desc
+<!-- 		 limit #{startIndex},#{pageSize} -->
 	</select>
 	
 </mapper>
