@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.support.json.JSONParser;
 import com.bjs.demo.pagehelper.dao.QueueDao;
 import com.bjs.demo.pagehelper.model.QueueEntity;
 import com.bjs.demo.pagehelper.service.QueueService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 
 
@@ -30,7 +32,6 @@ public class QueueServiceImpl implements QueueService {
             log.error("QueueServiceImpl#queryForPageForAgent()---END....", e);
             throw new Exception("分页获取消息信息报错。", e);
         }
-    
 	}
 
 }

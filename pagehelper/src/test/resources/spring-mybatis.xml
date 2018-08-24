@@ -41,22 +41,22 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:sqlmap-config.xml" />
 
-		<property name="plugins">
-			<array>
-				<bean class="com.github.pagehelper.PageInterceptor" >
-					<property name="properties">
-						<value>
-							helperDialect=mysql
-							ms.flushInterval=60000
-						</value>
-					</property>
-				</bean>
-			</array>
-		</property>
+<!-- 		<property name="plugins"> -->
+<!-- 			<array> -->
+<!-- 				<bean class="com.github.pagehelper.PageInterceptor" > -->
+<!-- 					<property name="properties"> -->
+<!-- 						<value> -->
+<!-- 							helperDialect=mysql -->
+<!-- 							ms.flushInterval=60000 -->
+<!-- 						</value> -->
+<!-- 					</property> -->
+<!-- 				</bean> -->
+<!-- 			</array> -->
+<!-- 		</property> -->
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="cn.creditease.message.center.dao" />
+		<property name="basePackage" value="com.bjs.demo.pagehelper.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 	</bean>
 
