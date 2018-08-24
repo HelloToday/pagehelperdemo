@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bjs.demo.pagehelper.dao.QueueDao">
+	<resultMap id="BaseResultMap"
+		type="com.bjs.demo.pagehelper.model.QueueEntity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="appid" property="appid" jdbcType="VARCHAR" />
+		<result column="customerId" property="customerId" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="system" property="system" jdbcType="INTEGER" />
+		<result column="userId" property="userId" jdbcType="INTEGER" />
+		<result column="createTime" property="createTime" jdbcType="VARCHAR" />
+		<result column="updateTime" property="updateTime" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="tagId" property="tagId" jdbcType="INTEGER" />
+		<result column="reminderId" property="reminderId" jdbcType="INTEGER" />
+		<result column="locationType" property="locationType" jdbcType="INTEGER" />
+		<result column="locationCode" property="locationCode" jdbcType="VARCHAR" />
+		<result column="generalNoticeId" property="generalNoticeId" jdbcType="INTEGER" />
+		<result column="iosJumpParam" property="iosJumpParam" jdbcType="VARCHAR" />
+		<result column="androidJumpParam" property="androidJumpParam" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, appid,customerId, content, status, system,userId, createTime, updateTime,title,tagId,reminderId,locationType,locationCode,generalNoticeId
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select 
+		<include refid="Base_Column_List" />
+		from fso_push_queue
+		where id = #{id,jdbcType=INTEGER} and isDelete=0
+	</select>
+	<select id="queryForPage" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from fso_push_queue
+		where  1=1
+		<if test="content != null">
+			and content like CONCAT('%',#{content},'%')
+		</if>
+		<if test="isDelete != null">
+			and isDelete = #{isDelete}
+		</if>
+		<if test="userId != null">
+			 and userId = #{userId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="customerId != null">
+			and customerId = #{customerId,jdbcType=INTEGER}
+		</if>
+		<if test="customerId == null">
+			and customerId is not null
+		</if>
+		<if test="system != null">
+			and system = #{system,jdbcType=INTEGER}
+		</if>
+		order by createTime desc limit #{startIndex},#{pageSize}
+	</select>
+	<select id="queryForPageForAgent" resultMap="BaseResultMap"
+		parameterType="map">
+		select 
+		q.id id, 
+		q.appid appid,
+		q.customerId customerId, 
+		q.content content, 
+		q.status status, 
+		q.system system,
+		q.userId userId,
+		q.createTime createTime, 
+		q.updateTime updateTime,
+		q.title title,
+		q.tagId tagId,
+		q.reminderId reminderId,
+		q.locationType locationType,
+		q.locationCode locationCode,
+		q.generalNoticeId generalNoticeId,
+		n.iosJumpParam iosJumpParam,
+		n.androidJumpParam androidJumpParam
+		from fso_push_queue q left join fso_general_notice n 
+		on q.generalNoticeId = n.id
+		where  q.isDelete=0
+		<if test="userId != null">
+			 and q.userId = #{userId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null">
+			and q.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="customerId == null">
+			and q.customerId is null
+		</if>
+		<if test="system != null and (4==system or 5==system)">
+			and (q.system = #{system,jdbcType=INTEGER} or q.system=6)
+		</if>
+		<if test="system != null and !(4==system or 5==system)">
+			and q.system = #{system,jdbcType=INTEGER}
+		</if>
+		<if test="tagId != null ">
+			and q.tagId = #{tagId,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and endTime != null ">
+			and q.createTime <![CDATA[ >= ]]> #{startTime} and q.createTime <![CDATA[ <= ]]> #{endTime}
+		</if>
+		<if test="locationTypes != null ">
+			and q.locationType in
+			<foreach collection="locationTypes" index="index" item="locationType" open="(" close=")" separator=",">
+				#{locationType}
+			</foreach>
+		</if>
+		order by q.createTime desc limit #{startIndex},#{pageSize}
+	</select>
+	<select id="countAgent" resultType="int"
+		parameterType="map">
+		select count(q.id) from fso_push_queue q left join fso_general_notice n on q.generalNoticeId = n.id
+		where  q.isDelete=0
+		<if test="userId != null">
+			 and q.userId = #{userId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null">
+			and q.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="customerId == null">
+			and q.customerId is null
+		</if>
+		<if test="system != null and (4==system or 5==system)">
+			and (q.system = #{system,jdbcType=INTEGER} or q.system=6)
+		</if>
+		<if test="system != null and !(4==system or 5==system)">
+			and q.system = #{system,jdbcType=INTEGER}
+		</if>
+		<if test="tagId != null ">
+			and q.tagId = #{tagId,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and endTime != null ">
+			and q.createTime <![CDATA[ >= ]]> #{startTime} and q.createTime <![CDATA[ <= ]]> #{endTime}
+		</if>
+		<if test="locationTypes != null ">
+			and q.locationType in
+			<foreach collection="locationTypes" index="index" item="locationType" open="(" close=")" separator=",">
+				#{locationType}
+			</foreach>
+		</if>
+	</select>
+	<select id="count" resultType="int"
+		parameterType="map">
+		select count(id) from fso_push_queue where  isDelete=0
+		<if test="userId != null">
+			 and userId = #{userId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="customerId != null">
+			and customerId = #{customerId,jdbcType=INTEGER}
+		</if>
+		<if test="customerId == null">
+			and customerId is not null
+		</if>
+		<if test="system != null">
+			and system = #{system,jdbcType=INTEGER}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from fso_push_queue
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	
+	<insert id="batchInsert"
+		parameterType="java.util.List">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into fso_push_queue (appid,customerId, content, status,
+		system, userId, createTime, updateTime,title,
+		tagId,reminderId,isDelete,
+		locationType,locationCode,generalNoticeId
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >   
+		(#{item.appid,jdbcType=VARCHAR},#{item.customerId,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR},
+		#{item.status,jdbcType=INTEGER},
+		#{item.system,jdbcType=INTEGER},#{item.userId,jdbcType=INTEGER},
+		#{item.createTime,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=VARCHAR},#{item.title,jdbcType=VARCHAR},
+		#{item.tagId,jdbcType=INTEGER},#{item.reminderId,jdbcType=INTEGER},0,
+		#{item.locationType,jdbcType=INTEGER},#{item.locationCode,jdbcType=VARCHAR},
+		#{item.generalNoticeId,jdbcType=VARCHAR}
+		)
+		</foreach>
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bjs.demo.pagehelper.model.QueueEntity">
+		update fso_push_queue
+		<set>
+			<if test="appid != null">
+				appid = #{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customerId = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="system != null">
+				system = #{system,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				userId = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateQueueStatus"
+		parameterType="com.bjs.demo.pagehelper.model.QueueEntity">
+		update fso_push_queue
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updataQueueStatusByUserId"
+		parameterType="com.bjs.demo.pagehelper.model.QueueEntity">
+		update fso_push_queue
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where userId = #{userId,jdbcType=INTEGER} 
+		<if test="system != null and (4==system or 5==system)">
+			and (system = #{system,jdbcType=INTEGER} or system=6)
+		</if>
+		<if test="system != null and !(4==system or 5==system)">
+			and system = #{system,jdbcType=INTEGER}
+		</if>
+	</update>
+	
+	
+	<select id="queryByDate" resultMap="BaseResultMap"
+		parameterType="map">
+		select 
+		<include refid="Base_Column_List" />
+		from fso_push_queue
+		where isDelete=0 and createTime between #{datestart} and #{dateend} 
+		and customerId is not null
+		and userId=#{userId}
+		and system=#{system}
+	</select>
+	
+	<select id="queryByMonth" resultMap="BaseResultMap"
+		parameterType="map">
+		select DATE_FORMAT(createTime, '%Y-%m-%d') as createTime
+		from fso_push_queue
+		where  isDelete=0 
+		and createTime between #{datestart} and #{dateend} 
+		and customerId is not null
+		and userId=#{userId}
+		and system=#{system}
+	</select>
+	
+	<update id="updateByReminderId"
+		parameterType="java.math.BigInteger">
+		update fso_push_queue set isDelete=1, updateTime=now()
+		where reminderId = #{reminderId}
+	</update>
+	<update id="deleteQueueById" parameterType="map">
+		update fso_push_queue set isDelete=1,updateTime=#{date},delectUserId=#{userId}
+		where id = #{id}
+	</update>
+</mapper>
