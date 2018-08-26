@@ -28,54 +28,65 @@
 	<select id="queryForPageForAgent" resultMap="BaseResultMap"
 		parameterType="map">
 		select 
-		q.id id, 
-		q.appid appid,
-		q.customerId customerId, 
-		q.content content, 
-		q.status status, 
-		q.system system,
-		q.userId userId,
-		q.createTime createTime, 
-		q.updateTime updateTime,
-		q.title title,
-		q.tagId tagId,
-		q.reminderId reminderId,
-		q.locationType locationType,
-		q.locationCode locationCode,
-		q.generalNoticeId generalNoticeId,
-		n.iosJumpParam iosJumpParam,
-		n.androidJumpParam androidJumpParam
-		from fso_push_queue q left join fso_general_notice n 
-		on q.generalNoticeId = n.id
-		where  q.isDelete=0
+		id id, 
+		appid appid,
+		customerId customerId, 
+		content content, 
+		status status, 
+		system system,
+		userId userId,
+		createTime createTime, 
+		updateTime updateTime,
+		title title,
+		tagId tagId,
+		reminderId reminderId,
+		locationType locationType,
+		locationCode locationCode,
+		generalNoticeId generalNoticeId
+		from fso_push_queue 
+		where  isDelete=0
 		<if test="userId != null">
-			 and q.userId = #{userId,jdbcType=INTEGER}
+			 and userId = #{userId,jdbcType=INTEGER}
 		</if>
 		<if test="status != null">
-			and q.status = #{status,jdbcType=INTEGER}
+			and status = #{status,jdbcType=INTEGER}
 		</if>
 		<if test="customerId == null">
-			and q.customerId is null
+			and customerId is null
 		</if>
 		<if test="system != null and (4==system or 5==system)">
-			and (q.system = #{system,jdbcType=INTEGER} or q.system=6)
+			and (system = #{system,jdbcType=INTEGER} or system=6)
 		</if>
 		<if test="system != null and !(4==system or 5==system)">
-			and q.system = #{system,jdbcType=INTEGER}
+			and system = #{system,jdbcType=INTEGER}
 		</if>
 		<if test="tagId != null ">
-			and q.tagId = #{tagId,jdbcType=INTEGER}
+			and tagId = #{tagId,jdbcType=INTEGER}
 		</if>
 		<if test="startTime != null and endTime != null ">
-			and q.createTime <![CDATA[ >= ]]> #{startTime} and q.createTime <![CDATA[ <= ]]> #{endTime}
+			and createTime <![CDATA[ >= ]]> #{startTime} and createTime <![CDATA[ <= ]]> #{endTime}
 		</if>
-		<if test="locationTypes != null ">
-			and q.locationType in
-			<foreach collection="locationTypes" index="index" item="locationType" open="(" close=")" separator=",">
-				#{locationType}
-			</foreach>
-		</if>
-		order by q.createTime desc limit #{startIndex},#{pageSize}
-	</select>
 	
+<!-- 		order by createTime desc limit #{startIndex},#{pageSize} -->
+	</select>
+	<insert id="saveQueue"
+		parameterType="com.bjs.demo.pagehelper.model.QueueEntity">
+
+		insert into fso_push_queue (appid,customerId, content, status,
+		system, userId, createTime, updateTime,title,
+		tagId,reminderId,isDelete,
+		locationType,locationCode,generalNoticeId
+		)
+		values
+	
+		(#{appid,jdbcType=VARCHAR},#{customerId,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{system,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
+		#{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},
+		#{tagId,jdbcType=INTEGER},#{reminderId,jdbcType=INTEGER},0,
+		#{locationType,jdbcType=INTEGER},#{locationCode,jdbcType=VARCHAR},
+		#{generalNoticeId,jdbcType=VARCHAR}
+		)
+	
+	</insert>
 </mapper>

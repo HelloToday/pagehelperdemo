@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.bjs.demo.pagehelper.model.QueueEntity;
 import com.bjs.demo.pagehelper.service.QueueService;
+import com.github.pagehelper.PageHelper;
 
 @Controller
 public class IndexController {
@@ -25,7 +27,8 @@ public class IndexController {
 		map.put("system", 4);
 		map.put("startIndex", 0); 
 		map.put("pageSize", 10);
+		
 		List<QueueEntity> list = queueService.queryForPageForAgent(map);
-		return list.toString();
+		return JSON.toJSONString(list);
 	}
 }

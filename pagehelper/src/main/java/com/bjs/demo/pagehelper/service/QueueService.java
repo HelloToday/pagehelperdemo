@@ -8,4 +8,5 @@ import com.bjs.demo.pagehelper.model.QueueEntity;
 
 public interface QueueService {
 	List<QueueEntity> queryForPageForAgent(Map map) throws Exception;
+	public int saveQueue(QueueEntity queue);
 }

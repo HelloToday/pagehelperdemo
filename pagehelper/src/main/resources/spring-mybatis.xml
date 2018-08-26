@@ -15,9 +15,9 @@
 
 
 	<bean id = "dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-		<property name="url" value="jdbc:mysql://wmg-mysql-master-dev.caiwu.corp:3311/message_center_db" />
-		<property name="username" value="message_centerdb" />
-		<property name="password" value="message_centerdb123" />
+		<property name="url" value="jdbc:mysql://192.168.56.104:3306/wordpress?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="word" />
+		<property name="password" value="word" />
 		<!-- 配置初始化大小、最小、最大 -->
 		<property name="initialSize" value="5" />
 		<property name="minIdle" value="5" />
@@ -41,18 +41,18 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:sqlmap-config.xml" />
 
-<!-- 		<property name="plugins"> -->
-<!-- 			<array> -->
-<!-- 				<bean class="com.github.pagehelper.PageInterceptor" > -->
-<!-- 					<property name="properties"> -->
-<!-- 						<value> -->
-<!-- 							helperDialect=mysql -->
-<!-- 							ms.flushInterval=60000 -->
-<!-- 						</value> -->
-<!-- 					</property> -->
-<!-- 				</bean> -->
-<!-- 			</array> -->
-<!-- 		</property> -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor" >
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+							ms.flushInterval=60000
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

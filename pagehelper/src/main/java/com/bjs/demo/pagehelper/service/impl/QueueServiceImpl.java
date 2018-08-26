@@ -13,6 +13,7 @@ import com.bjs.demo.pagehelper.dao.QueueDao;
 import com.bjs.demo.pagehelper.model.QueueEntity;
 import com.bjs.demo.pagehelper.service.QueueService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.github.pagehelper.PageHelper;
 
 
 
@@ -24,6 +25,7 @@ public class QueueServiceImpl implements QueueService {
 	public List<QueueEntity> queryForPageForAgent(Map map) throws Exception {
 
         try {
+        	PageHelper.startPage(1, 10);
             log.info("QueueServiceImpl#queryForPageForAgent()---START...");
             List<QueueEntity> list = queueDao.queryForPageForAgent(map);
             log.info("QueueServiceImpl#queryForPageForAgent()---END.....");
@@ -32,6 +34,10 @@ public class QueueServiceImpl implements QueueService {
             log.error("QueueServiceImpl#queryForPageForAgent()---END....", e);
             throw new Exception("分页获取消息信息报错。", e);
         }
+	}
+	
+	public int saveQueue(QueueEntity queue) {
+		return queueDao.saveQueue(queue);
 	}
 
 }

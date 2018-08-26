@@ -6,5 +6,6 @@ import java.util.Map;
 import com.bjs.demo.pagehelper.model.QueueEntity;
 
 public interface QueueDao{
-	List<QueueEntity> queryForPageForAgent(Map map);
+	public List<QueueEntity> queryForPageForAgent(Map map);
+	public int saveQueue(QueueEntity map);
 }
